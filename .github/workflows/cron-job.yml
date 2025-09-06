@@ -2,7 +2,7 @@ name: Run Tigia Script
 
 on:
   schedule:
-    - cron: "*/2 * * * *"   # chạy mỗi 5 phút (UTC time)
+    - cron: "*/2 * * * *"   # chạy mỗi 2 phút (UTC)
   workflow_dispatch:        # cho phép chạy thủ công
 
 jobs:
@@ -21,13 +21,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # ✅ Cài ODBC Driver cho SQL Server
       - name: Install ODBC Driver 17 for SQL Server
         run: |
-          sudo su
-          curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-          curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
-          exit
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+          curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
 
