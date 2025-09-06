@@ -6,20 +6,20 @@ import xml.etree.ElementTree as ET
 from SQLManager import SQLManager
 import os
 
-# sql_manager = SQLManager(
-#     server_name = "14.161.14.133",
-#     database_name = "QuanLyKhoMoc2023",
-#     username = "sa",
-#     password = "9905376"
-# )
-
-
 sql_manager = SQLManager(
-    server_name   = os.getenv("DB_SERVER"),
-    database_name = os.getenv("DB_NAME"),
-    username      = os.getenv("DB_USER"),
-    password      = os.getenv("DB_PASS")
+    server_name = "14.161.14.133",
+    database_name = "QuanLyKhoMoc2023",
+    username = "sa",
+    password = "9905376"
 )
+
+
+# sql_manager = SQLManager(
+#     server_name   = os.getenv("DB_SERVER"),
+#     database_name = os.getenv("DB_NAME"),
+#     username      = os.getenv("DB_USER"),
+#     password      = os.getenv("DB_PASS")
+# )
 
 
 def get_vcb_rates():
