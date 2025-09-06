@@ -4,14 +4,22 @@ from decimal import Decimal
 import requests
 import xml.etree.ElementTree as ET
 from SQLManager import SQLManager
+import os
+
+# sql_manager = SQLManager(
+#     server_name = "14.161.14.133",
+#     database_name = "QuanLyKhoMoc2023",
+#     username = "sa",
+#     password = "9905376"
+# )
+
 
 sql_manager = SQLManager(
-    server_name = "14.161.14.133",
-    database_name = "QuanLyKhoMoc2023",
-    username = "sa",
-    password = "9905376"
+    server_name   = os.getenv("DB_SERVER"),
+    database_name = os.getenv("DB_NAME"),
+    username      = os.getenv("DB_USER"),
+    password      = os.getenv("DB_PASS")
 )
-
 
 
 def get_vcb_rates():
@@ -90,17 +98,17 @@ def job():
         print("❌ Không tìm thấy tỷ giá USD")
 
 
-# if __name__ == "__main__":
-#     try:
-#         job()
-#     except Exception as e:
-#         print("Lỗi khi chạy job:", e)
+if __name__ == "__main__":
+    try:
+        job()
+    except Exception as e:
+        print("Lỗi khi chạy job:", e)
 
 # Lên lịch chạy mỗi 1 phút
-schedule.every(2).minutes.do(job)
+# schedule.every(2).minutes.do(job)
 
-# Chạy chương trình
-print("⏰ Bắt đầu chụp màn hình và gửi email tự động. Nhấn Ctrl+C để dừng.")
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# # Chạy chương trình
+# print("⏰ Bắt đầu chụp màn hình và gửi email tự động. Nhấn Ctrl+C để dừng.")
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)

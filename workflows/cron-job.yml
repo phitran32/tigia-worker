@@ -1,0 +1,30 @@
+name: Run Tigia Script
+
+on:
+  schedule:
+    - cron: "*/2 * * * *"   # chạy mỗi 5 phút (UTC time)
+  workflow_dispatch:        # cho phép chạy thủ công
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tigia.py
+        env:
+          DB_SERVER: ${{ secrets.DB_SERVER }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+        run: python tigia.py
