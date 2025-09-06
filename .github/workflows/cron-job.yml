@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: pip install -r requirements.txt
 
       - name: Install ODBC Driver 17 for SQL Server
@@ -27,10 +27,31 @@ jobs:
           curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
-      - name: Debug connectivity
+
+      - name: Test SQL Server connectivity
+        env:
+          DB_SERVER: ${{ secrets.DB_SERVER }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
         run: |
-          sudo apt-get install -y telnet
-          telnet 14.161.14.133 1433
+          python - <<EOF
+          import pyodbc, os
+          try:
+              conn = pyodbc.connect(
+                  f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+                  f"SERVER={os.environ['DB_SERVER']};"
+                  f"DATABASE={os.environ['DB_NAME']};"
+                  f"UID={os.environ['DB_USER']};"
+                  f"PWD={os.environ['DB_PASS']}",
+                  timeout=5
+              )
+              print("✅ SQL Server connection OK")
+              conn.close()
+          except Exception as e:
+              print("❌ Cannot connect:", e)
+              exit(1)
+          EOF
 
       - name: Run tigia.py
         env:
