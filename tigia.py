@@ -79,36 +79,39 @@ def get_usd_rate():
 # Hàm chính
 def job():
     print("🔍 Đang thực hiện công việc...")
-    usd = get_usd_rate()
-    if usd:
-        print("💵 Tỷ giá USD/VND (Vietcombank):")
-        print(f"  CurrencyCode     : {usd['CurrencyCode']}")
-        print(f"  CurrencyName     : {usd['CurrencyName']}")
-        print(f"  Mua tiền mặt     : {usd['Buy']}")
-        print(f"  Mua chuyển khoản : {usd['Transfer']}")
-        print(f"  Bán ra           : {usd['Sell']}")
-        sql_manager.update_tigia(
-            usd["CurrencyCode"],
-            usd["CurrencyName"],
-            usd["Buy"],
-            usd["Transfer"],
-            usd["Sell"]
-        )
-    else:
-        print("❌ Không tìm thấy tỷ giá USD")
-
-
-if __name__ == "__main__":
     try:
-        job()
+        usd = get_usd_rate()
+        if usd:
+            print("💵 Tỷ giá USD/VND (Vietcombank):")
+            print(f"  CurrencyCode     : {usd['CurrencyCode']}")
+            print(f"  CurrencyName     : {usd['CurrencyName']}")
+            print(f"  Mua tiền mặt     : {usd['Buy']}")
+            print(f"  Mua chuyển khoản : {usd['Transfer']}")
+            print(f"  Bán ra           : {usd['Sell']}")
+            sql_manager.update_tigia(
+                usd["CurrencyCode"],
+                usd["CurrencyName"],
+                usd["Buy"],
+                usd["Transfer"],
+                usd["Sell"]
+            )
+        else:
+            print("❌ Không tìm thấy tỷ giá USD")
     except Exception as e:
-        print("Lỗi khi chạy job:", e)
+        print(f"❌ Lỗi khi cập nhật tỷ giá  {e}")
 
-# Lên lịch chạy mỗi 1 phút
-# schedule.every(2).minutes.do(job)
 
-# # Chạy chương trình
-# print("⏰ Bắt đầu chụp màn hình và gửi email tự động. Nhấn Ctrl+C để dừng.")
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
+# if __name__ == "__main__":
+#     try:
+#         job()
+#     except Exception as e:
+#         print("Lỗi khi chạy job:", e)
+
+#Lên lịch chạy mỗi 1 phút
+schedule.every(2).minutes.do(job)
+
+# Chạy chương trình
+print("⏰ Bắt đầu chạy tự động. Nhấn Ctrl+C để dừng.")
+while True:
+    schedule.run_pending()
+    time.sleep(1)
